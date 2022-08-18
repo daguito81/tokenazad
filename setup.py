@@ -6,6 +6,7 @@ setup(
     version='0.0.1',
     description='A simple tool to get Azure AD Tokens with MSAL and set them as environment variables',
     long_description=open('README.md').read(),
+    long_description_content_type='text/markdown',
     author='Dagoberto Romer',
     author_email="dagoromer85@gmail.com",
     classifiers=[
