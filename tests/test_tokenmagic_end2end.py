@@ -3,7 +3,7 @@ import time
 import pytest
 
 from tests.conftest import MainTestSetup
-from tokenazad.tokenmagic import AzureADTokenSetter, main
+from tokenazad.tokenmagic import main
 import os
 import dotenv
 
@@ -16,8 +16,10 @@ class TestTokenazadEnd2End(MainTestSetup):
     def check_env(service):
         if service is not None:
             assert os.environ[f"{service}_TOKEN"] is not None and os.environ[f"{service}_TOKEN"] != ""
-            assert os.environ[f"{service}_TOKEN_TIME_UTC"] is not None and os.environ[f"{service}_TOKEN_TIME_UTC"] != ""
-            assert os.environ[f"{service}_TOKEN_TYPE"] is not None and os.environ[f"{service}_TOKEN_TYPE"] != ""
+            assert os.environ[f"{service}_TOKEN_TIME_UTC"] is not None \
+                   and os.environ[f"{service}_TOKEN_TIME_UTC"] != ""
+            assert os.environ[f"{service}_TOKEN_TYPE"] is not None \
+                   and os.environ[f"{service}_TOKEN_TYPE"] != ""
         else:
             assert os.environ["TOKEN"] is not None and os.environ["TOKEN"] != ""
             assert os.environ["TOKEN_TIME_UTC"] is not None and os.environ["TOKEN_TIME_UTC"] != ""

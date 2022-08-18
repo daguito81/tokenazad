@@ -4,6 +4,7 @@ import dotenv
 
 dotenv.load_dotenv()
 
+
 class TestTokenazadClient:
     def test_tokenazad_client_generator(self):
         TENANT = os.getenv('TENANT_ID')
@@ -13,7 +14,8 @@ class TestTokenazadClient:
         client._get_token_client_secret()
         assert client._app is not None
         assert client.ready is True
-        assert client._app.authority.authorization_endpoint == f"https://login.microsoftonline.com/{TENANT}/oauth2/v2.0/authorize"
+        assert client._app.authority.authorization_endpoint == f"https://login.microsoftonline.com/{TENANT}" \
+                                                               f"/oauth2/v2.0/authorize"
         assert client.token is not None
         assert "access_token" in client.token
 
@@ -24,7 +26,8 @@ class TestTokenazadClient:
         client = AzureADTokenSetter(TENANT, CLIENT_ID, CLIENT_SECRET)
         client._get_token_client_secret()
         assert client.ready is False
-        assert client._app.authority.authorization_endpoint == f"https://login.microsoftonline.com/{TENANT}/oauth2/v2.0/authorize"
+        assert client._app.authority.authorization_endpoint == f"https://login.microsoftonline.com/{TENANT}" \
+                                                               f"/oauth2/v2.0/authorize"
         assert client.token is None
         assert client._error == "invalid_client"
 
@@ -35,7 +38,8 @@ class TestTokenazadClient:
         client = AzureADTokenSetter(TENANT, CLIENT_ID, CLIENT_SECRET)
         client._get_token_client_secret()
         assert client.ready is False
-        assert client._app.authority.authorization_endpoint == f"https://login.microsoftonline.com/{TENANT}/oauth2/v2.0/authorize"
+        assert client._app.authority.authorization_endpoint == f"https://login.microsoftonline.com/{TENANT}" \
+                                                               f"/oauth2/v2.0/authorize"
         assert client.token is None
         assert client._error == "unauthorized_client"
 
@@ -48,5 +52,5 @@ class TestTokenazadClient:
         assert client.ready is False
         assert client._app is None
         assert client.token is None
-        assert client._error.startswith(f"Unable to get authority configuration for https://login.microsoftonline.com/{TENANT}.")
-
+        assert client._error.startswith(
+            f"Unable to get authority configuration for https://login.microsoftonline.com/{TENANT}.")
