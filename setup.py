@@ -15,8 +15,8 @@ setup(
     ],
     python_requires='>=3.8',
     install_requires=[
-        'msal==1.17.0',
-        'python-dotenv==0.20.0',
+        'msal>=1.17.0',
+        'python-dotenv>=0.20.0',
     ],
     setup_requires=['pytest-runner'],
     tests_require=[
