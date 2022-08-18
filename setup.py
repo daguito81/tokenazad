@@ -5,6 +5,7 @@ setup(
     packages=find_packages(include=['tokenazad']),
     version='0.0.1',
     description='A simple tool to get Azure AD Tokens with MSAL and set them as environment variables',
+    long_description=open('README.md').read(),
     author='Dagoberto Romer',
     author_email="dagoromer85@gmail.com",
     license='MIT',
