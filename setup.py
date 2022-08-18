@@ -8,7 +8,6 @@ setup(
     long_description=open('README.md').read(),
     author='Dagoberto Romer',
     author_email="dagoromer85@gmail.com",
-    license='MIT',
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
