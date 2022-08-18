@@ -1,0 +1,1 @@
+# Library to get Azure AD Token using MSAL and setting them as Environment Variables
