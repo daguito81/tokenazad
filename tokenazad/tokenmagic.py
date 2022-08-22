@@ -6,6 +6,7 @@ import logging
 import time
 from datetime import datetime as datetime
 import sys
+from pathlib import Path
 
 from typing import Dict, Optional
 from msal import ConfidentialClientApplication
@@ -83,12 +84,20 @@ class AzureADTokenSetter:
             return
         self._set_token_env_var()
 
-    def persist_token(self) -> None:
+    def persist_token(self, service: str, persist_path=None) -> None:
         """
         This function will persist the token in a local filepath
         :return:
         """
-        pass
+        token_to_write = self._token['access_token']
+        if persist_path is not None:
+            file_path = Path(persist_path) / f"{service}.token"
+        else:
+            file_path = Path(f'/tmp/tokenazad/{service}.token')
+
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+        with open(file_path, 'w') as f:
+            f.write(token_to_write)
 
     @property
     def token(self) -> Dict[str, str]:
