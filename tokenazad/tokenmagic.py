@@ -83,6 +83,13 @@ class AzureADTokenSetter:
             return
         self._set_token_env_var()
 
+    def persist_token(self) -> None:
+        """
+        This function will persist the token in a local filepath
+        :return:
+        """
+        pass
+
     @property
     def token(self) -> Dict[str, str]:
         return self._token
