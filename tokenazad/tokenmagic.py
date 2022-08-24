@@ -1,11 +1,14 @@
 from __future__ import annotations
 
+from .utils.errors import BadClientException
+
 import dotenv
 import os
 import logging
 import time
 from datetime import datetime as datetime
 import sys
+from pathlib import Path
 
 from typing import Dict, Optional
 from msal import ConfidentialClientApplication
@@ -22,7 +25,22 @@ class AzureADTokenSetter:
         self.var_prefix: Optional[str] = var_prefix
         self._error: Optional[str] = None
         self._token_expiration_min: int = token_expiration_min
+        self._init_check()
         self._create_client()
+
+    def _init_check(self) -> None:
+        if self._tenant is None:
+            logging.error("TENANT_ID is not set as Environment Variable")
+            self._error = "TENANT_ID is not set as Environment Variable"
+            raise BadClientException(self._error)
+        if self._client_id is None:
+            logging.error("CLIENT_ID is not set as Environment Variable")
+            self._error = "CLIENT_ID is not set as Environment Variable"
+            raise BadClientException(self._error)
+        if self.__client_secret is None:
+            logging.error("CLIENT_SECRET is not set as Environment Variable")
+            self._error = "CLIENT_SECRET is not set as Environment Variable"
+            raise BadClientException(self._error)
 
     def _create_client(self):
         try:
@@ -82,6 +100,22 @@ class AzureADTokenSetter:
             self._error = self._token['error']
             return
         self._set_token_env_var()
+
+    def persist_token(self, persist_path=None) -> None:
+        """
+        This function will persist the token in a local filepath
+        :return:
+        """
+        token_to_write = self._token['access_token']
+        service = self.var_prefix if self.var_prefix is not None else "TOKEN"
+        if persist_path is not None:
+            file_path = Path(persist_path) / f"{service}.token"
+        else:
+            file_path = Path(f'/tmp/tokenazad/{service}.token')
+
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+        with open(file_path, 'w') as f:
+            f.write(token_to_write)
 
     @property
     def token(self) -> Dict[str, str]:
