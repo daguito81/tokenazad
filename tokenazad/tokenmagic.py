@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from .utils.errors import BadClientException
+
 import dotenv
 import os
 import logging
@@ -23,7 +25,22 @@ class AzureADTokenSetter:
         self.var_prefix: Optional[str] = var_prefix
         self._error: Optional[str] = None
         self._token_expiration_min: int = token_expiration_min
+        self._init_check()
         self._create_client()
+
+    def _init_check(self) -> None:
+        if self._tenant is None:
+            logging.error("TENANT_ID is not set as Environment Variable")
+            self._error = "TENANT_ID is not set as Environment Variable"
+            raise BadClientException(self._error)
+        if self._client_id is None:
+            logging.error("CLIENT_ID is not set as Environment Variable")
+            self._error = "CLIENT_ID is not set as Environment Variable"
+            raise BadClientException(self._error)
+        if self.__client_secret is None:
+            logging.error("CLIENT_SECRET is not set as Environment Variable")
+            self._error = "CLIENT_SECRET is not set as Environment Variable"
+            raise BadClientException(self._error)
 
     def _create_client(self):
         try:
