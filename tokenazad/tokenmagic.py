@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from .utils.errors import BadClientException
+from tokenazad.utils.errors import BadClientException
 
 import dotenv
 import os
