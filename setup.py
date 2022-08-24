@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name='tokenazad',
     packages=find_packages(include=['tokenazad']),
-    version='0.0.1',
+    version='0.0.4',
     description='A simple tool to get Azure AD Tokens with MSAL and set them as environment variables',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
