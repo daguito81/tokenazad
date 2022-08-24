@@ -1,10 +1,7 @@
-import time
-
 import pytest
 
 from tests.conftest import MainTestSetup
 import dotenv
-from pathlib import Path
 
 dotenv.load_dotenv()
 
