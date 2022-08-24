@@ -84,12 +84,13 @@ class AzureADTokenSetter:
             return
         self._set_token_env_var()
 
-    def persist_token(self, service: str, persist_path=None) -> None:
+    def persist_token(self, persist_path=None) -> None:
         """
         This function will persist the token in a local filepath
         :return:
         """
         token_to_write = self._token['access_token']
+        service = self.var_prefix if self.var_prefix is not None else "TOKEN"
         if persist_path is not None:
             file_path = Path(persist_path) / f"{service}.token"
         else:
