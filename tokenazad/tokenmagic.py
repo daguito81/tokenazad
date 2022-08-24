@@ -123,7 +123,10 @@ class AzureADTokenSetter:
 
 
 def main(service: str) -> None:
-    print("Running Module with Service: " + service)
+    try:
+        print("Running Module with Service: " + service)
+    except TypeError:
+        print("Running Module with Generic Service")
     dotenv.load_dotenv()
 
     tenant = os.getenv('TENANT_ID')
@@ -140,5 +143,5 @@ def main(service: str) -> None:
 
 
 if __name__ == '__main__':
-    service_prefix = sys.argv[1] if len(sys.argv) > 1 else None
+    service_prefix = sys.argv[1] if len(sys.argv) > 1  else None
     main(service_prefix)
