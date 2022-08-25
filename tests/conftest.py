@@ -21,7 +21,8 @@ class MainTestSetup:
         TENANT = os.getenv('TENANT_ID')
         CLIENT_ID = os.getenv('CLIENT_ID')
         CLIENT_SECRET = os.getenv('CLIENT_SECRET')
-        client = AzureADTokenSetter(TENANT, CLIENT_ID, CLIENT_SECRET, service)
+        OAUTH_SCOPE = os.getenv('OAUTH_SCOPE')
+        client = AzureADTokenSetter(TENANT, CLIENT_ID, CLIENT_SECRET, OAUTH_SCOPE, service)
         client._get_token_client_secret()
         yield client
         self.cleanup(service)

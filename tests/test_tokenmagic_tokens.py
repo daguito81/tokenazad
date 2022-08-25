@@ -42,8 +42,9 @@ class TestTokenazadTokens(MainTestSetup):
         TENANT = os.getenv('TENANT_ID')
         CLIENT_ID = os.getenv('CLIENT_ID')
         CLIENT_SECRET = "bad_secret"
+        OAUTH_SCOPE = os.getenv('OAUTH_SCOPE')
 
-        client = AzureADTokenSetter(TENANT, CLIENT_ID, CLIENT_SECRET)
+        client = AzureADTokenSetter(TENANT, CLIENT_ID, CLIENT_SECRET, OAUTH_SCOPE)
         client._get_token_client_secret()
         client._set_token_env_var()
         assert os.getenv("TOKEN", "NA") == "NA"
