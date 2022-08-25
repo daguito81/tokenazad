@@ -15,10 +15,12 @@ from msal import ConfidentialClientApplication
 
 
 class AzureADTokenSetter:
-    def __init__(self, tenant, client_id, client_secret, var_prefix=None, token_expiration_min=60) -> None:
+    def __init__(self, tenant, client_id, client_secret, oauth_scope,
+                 var_prefix=None, token_expiration_min=60) -> None:
         self._tenant: str = tenant
         self._client_id: str = client_id
         self.__client_secret: str = client_secret
+        self._oauth_scope: str = oauth_scope
         self._token: Optional[Dict[str, str]] = None
         self._app: Optional[ConfidentialClientApplication] = None
         self.ready: bool = False
@@ -41,6 +43,10 @@ class AzureADTokenSetter:
             logging.error("CLIENT_SECRET is not set as Environment Variable")
             self._error = "CLIENT_SECRET is not set as Environment Variable"
             raise BadClientException(self._error)
+        if self._oauth_scope is None:
+            logging.error("OAUTH_SCOPE is not set as Environment Variable")
+            self._error = "OAUTH_SCOPE is not set as Environment Variable"
+            raise BadClientException(self._error)
 
     def _create_client(self):
         try:
@@ -54,7 +60,7 @@ class AzureADTokenSetter:
 
     def _get_token_client_secret(self) -> None:
         if self.ready:
-            result: Dict[str, str] = self._app.acquire_token_for_client(scopes=['https://graph.microsoft.com/.default'])
+            result: Dict[str, str] = self._app.acquire_token_for_client(scopes=[self._oauth_scope])
             try:
                 _ = result['access_token']
             except KeyError:
@@ -132,9 +138,10 @@ def main(service: str) -> None:
     tenant = os.getenv('TENANT_ID')
     client_id = os.getenv('CLIENT_ID')
     client_secret = os.getenv('CLIENT_SECRET')
+    oauth_scope = os.getenv('OAUTH_SCOPE')
 
     print("Creating Client")
-    client: AzureADTokenSetter = AzureADTokenSetter(tenant, client_id, client_secret, service)
+    client: AzureADTokenSetter = AzureADTokenSetter(tenant, client_id, client_secret, oauth_scope, service)
     print("Getting Token")
     client.do_magic_trick()
     print("Persisting Token")
