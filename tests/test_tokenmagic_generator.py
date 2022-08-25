@@ -10,7 +10,8 @@ class TestTokenazadClient:
         TENANT = os.getenv('TENANT_ID')
         CLIENT_ID = os.getenv('CLIENT_ID')
         CLIENT_SECRET = os.getenv('CLIENT_SECRET')
-        client = AzureADTokenSetter(TENANT, CLIENT_ID, CLIENT_SECRET)
+        OAUTH_SCOPE = os.getenv('OAUTH_SCOPE')
+        client = AzureADTokenSetter(TENANT, CLIENT_ID, CLIENT_SECRET, OAUTH_SCOPE)
         client._get_token_client_secret()
         assert client._app is not None
         assert client.ready is True
@@ -23,7 +24,8 @@ class TestTokenazadClient:
         TENANT = os.getenv('TENANT_ID')
         CLIENT_ID = os.getenv('CLIENT_ID')
         CLIENT_SECRET = "bad_secret"
-        client = AzureADTokenSetter(TENANT, CLIENT_ID, CLIENT_SECRET)
+        OAUTH_SCOPE = os.getenv('OAUTH_SCOPE')
+        client = AzureADTokenSetter(TENANT, CLIENT_ID, CLIENT_SECRET, OAUTH_SCOPE)
         client._get_token_client_secret()
         assert client.ready is False
         assert client._app.authority.authorization_endpoint == f"https://login.microsoftonline.com/{TENANT}" \
@@ -35,7 +37,8 @@ class TestTokenazadClient:
         TENANT = os.getenv('TENANT_ID')
         CLIENT_ID = "bad_id"
         CLIENT_SECRET = os.getenv('CLIENT_SECRET')
-        client = AzureADTokenSetter(TENANT, CLIENT_ID, CLIENT_SECRET)
+        OAUTH_SCOPE = os.getenv('OAUTH_SCOPE')
+        client = AzureADTokenSetter(TENANT, CLIENT_ID, CLIENT_SECRET, OAUTH_SCOPE)
         client._get_token_client_secret()
         assert client.ready is False
         assert client._app.authority.authorization_endpoint == f"https://login.microsoftonline.com/{TENANT}" \
@@ -47,10 +50,22 @@ class TestTokenazadClient:
         TENANT = "a34de1ed-779e-40e2-baa2-038614t129d8"  # Made up tenant id
         CLIENT_ID = os.getenv('CLIENT_ID')
         CLIENT_SECRET = os.getenv('CLIENT_SECRET')
-        client = AzureADTokenSetter(TENANT, CLIENT_ID, CLIENT_SECRET)
+        OAUTH_SCOPE = os.getenv('OAUTH_SCOPE')
+        client = AzureADTokenSetter(TENANT, CLIENT_ID, CLIENT_SECRET, OAUTH_SCOPE)
         client._get_token_client_secret()
         assert client.ready is False
         assert client._app is None
         assert client.token is None
         assert client._error.startswith(
             f"Unable to get authority configuration for https://login.microsoftonline.com/{TENANT}.")
+
+    def test_tokenazad_client_failed_generator_bad_scope(self):
+        TENANT = os.getenv('TENANT_ID')
+        CLIENT_ID = os.getenv('CLIENT_ID')
+        CLIENT_SECRET = os.getenv('CLIENT_SECRET')
+        OAUTH_SCOPE = "api://df5af265-3a5a-5436-9ac2-a856432a9327/.default"  # Made up scope
+        client = AzureADTokenSetter(TENANT, CLIENT_ID, CLIENT_SECRET, OAUTH_SCOPE)
+        client._get_token_client_secret()
+        assert client.ready is False
+        assert client.token is None
+        assert client._error == 'invalid_resource'
